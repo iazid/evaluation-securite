@@ -374,7 +374,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Mecanisme de controle d'acces en place (authentification, habilitations) ?</div>
+      <div class="q-label">Un mecanisme de controle d'acces est-il en place (authentification, gestion des habilitations) ?</div>
       <div class="yn" id="yn_c_controle_acces">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -382,7 +382,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Les donnees sont-elles chiffrees ?</div>
+      <div class="q-label">Les donnees sont-elles chiffrees (en transit et/ou au repos) ?</div>
       <div class="choices">
         <label class="choice"><input type="radio" name="c_chiffrement" value="aucun"><span>Aucun chiffrement</span></label>
         <label class="choice"><input type="radio" name="c_chiffrement" value="transit"><span>En transit</span></label>
@@ -410,14 +410,6 @@ textarea { resize: vertical; min-height: 64px; }
     <div class="q">
       <div class="q-label">Nombre de personnes dont les donnees personnelles sont stockees</div>
       <input type="number" id="c_nb_personnes" placeholder="10000" min="0">
-    </div>
-
-    <div class="q">
-      <div class="q-label">La solution permet-elle des actions financieres (paiements, virements) ?</div>
-      <div class="yn" id="yn_c_financier">
-        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
-        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
-      </div><input type="hidden" id="c_financier" value="">
     </div>
 
     <div class="form-nav">
@@ -450,7 +442,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Controles de coherence ou validation des donnees saisies ?</div>
+      <div class="q-label">Des controles de coherence ou de validation des donnees saisies sont-ils en place ?</div>
       <div class="yn" id="yn_i_controles">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -458,7 +450,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Tracabilite ou piste d'audit sur les modifications ?</div>
+      <div class="q-label">Une tracabilite ou piste d'audit existe-t-elle sur les modifications de donnees ?</div>
       <div class="yn" id="yn_i_audit">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -482,7 +474,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Double validation ou separation des taches en place ?</div>
+      <div class="q-label">Un processus de double validation ou de separation des taches est-il en place ?</div>
       <div class="yn" id="yn_i_separation">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -501,7 +493,7 @@ textarea { resize: vertical; min-height: 64px; }
     <p class="section-desc">Risques lies a l'indisponibilite de la solution</p>
 
     <div class="q">
-      <div class="q-label">Tolerance maximale a l'indisponibilite</div>
+      <div class="q-label">Quelle est la tolerance maximale a l'indisponibilite de la solution ?</div>
       <div class="choices">
         <label class="choice"><input type="radio" name="d_tolerance" value="4h"><span>Moins de 4h</span></label>
         <label class="choice"><input type="radio" name="d_tolerance" value="1j"><span>Moins de 1 jour</span></label>
@@ -512,7 +504,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Impact de l'indisponibilite sur l'activite</div>
+      <div class="q-label">En cas d'indisponibilite, quel serait l'impact sur l'activite ?</div>
       <div class="choices">
         <label class="choice"><input type="radio" name="d_impact" value="1"><span>Negligeable</span></label>
         <label class="choice"><input type="radio" name="d_impact" value="2"><span>Mineur</span></label>
@@ -522,7 +514,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Mode degrade ou continuite manuelle disponible ?</div>
+      <div class="q-label">Un mode degrade ou une procedure de continuite manuelle est-il disponible ?</div>
       <div class="yn" id="yn_d_degrade">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -538,7 +530,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Utilisee dans des processus temps-reel ou critiques ?</div>
+      <div class="q-label">La solution est-elle utilisee dans des processus temps-reel ou critiques ?</div>
       <div class="yn" id="yn_d_temps_reel">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -555,12 +547,12 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Nombre de processus metier dependants</div>
+      <div class="q-label">Combien de processus metier dependent directement de cette solution ?</div>
       <input type="number" id="d_nb_processus" placeholder="3" min="0">
     </div>
 
     <div class="q">
-      <div class="q-label">Impact possible sur des clients ou partenaires externes ?</div>
+      <div class="q-label">L'indisponibilite pourrait-elle impacter des clients ou partenaires externes ?</div>
       <div class="yn" id="yn_d_externes">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -671,6 +663,7 @@ function cvs(ids) { return ids.filter(id => document.getElementById(id).checked)
 
 function calcProb() {
   let s = 1;
+  // Contexte: exposition & attractivite
   const net = rv('ctx_internet');
   if (net === 'oui') s += 2; else if (net === 'vpn') s += 1;
   const heb = rv('ctx_hebergement');
@@ -683,34 +676,39 @@ function calcProb() {
   if (dt.includes('sensibles') || dt.includes('financieres')) s += 1;
   if (dt.includes('strategiques')) s += 1;
   if (rv('ctx_integration') === 'oui-critique') s += 1;
-  return Math.min(4, Math.max(1, Math.round(s * 4 / 10)));
+  // Mesures de protection (absence = augmente la proba)
+  if (hv('c_controle_acces') === 'non') s += 2;
+  const ch = rv('c_chiffrement');
+  if (ch === 'aucun') s += 2; else if (ch === 'transit' || ch === 'repos') s += 1;
+  if (hv('i_controles') === 'non') s += 1;
+  if (hv('i_audit') === 'non') s += 1;
+  if (hv('i_separation') === 'non') s += 1;
+  if (hv('d_degrade') === 'non') s += 1;
+  if (hv('d_pra') === 'non') s += 1;
+  // Normaliser sur 1-4 (max possible ~19)
+  return Math.min(4, Math.max(1, Math.round(s * 4 / 19)));
 }
 
 function calcC() {
   let s = 0;
   s += (parseInt(rv('c_impact_fuite') || '0')) * 2;
   if (hv('c_reglementation') === 'oui') s += 2;
-  if (hv('c_controle_acces') === 'non') s += 1;
-  const ch = rv('c_chiffrement');
-  if (ch === 'aucun') s += 2; else if (ch === 'transit' || ch === 'repos') s += 1;
   if (hv('c_juridique') === 'oui') s += 2;
   if (hv('c_reputation') === 'oui') s += 1;
   const np = nv('c_nb_personnes');
   if (np > 10000) s += 2; else if (np > 1000) s += 1;
-  if (hv('c_financier') === 'oui') s += 1;
-  return Math.min(4, Math.max(1, Math.round(s * 4 / 14)));
+  // Normaliser sur 1-4 (max ~11)
+  return Math.min(4, Math.max(1, Math.round(s * 4 / 11)));
 }
 
 function calcI() {
   let s = 0;
   s += (parseInt(rv('i_impact_alteration') || '0')) * 2;
   if (hv('i_decisions') === 'oui') s += 2;
-  if (hv('i_controles') === 'non') s += 1;
-  if (hv('i_audit') === 'non') s += 1;
   if (hv('i_pertes') === 'oui') s += 2;
   if (hv('i_danger') === 'oui') s += 3;
-  if (hv('i_separation') === 'non') s += 1;
-  return Math.min(4, Math.max(1, Math.round(s * 4 / 16)));
+  // Normaliser sur 1-4 (max ~11)
+  return Math.min(4, Math.max(1, Math.round(s * 4 / 11)));
 }
 
 function calcD() {
@@ -718,15 +716,14 @@ function calcD() {
   const tol = rv('d_tolerance');
   if (tol === '4h') s += 4; else if (tol === '1j') s += 3; else if (tol === '3j') s += 2; else if (tol === '1s') s += 1;
   s += (parseInt(rv('d_impact') || '0')) * 2;
-  if (hv('d_degrade') === 'non') s += 1;
-  if (hv('d_pra') === 'non') s += 1;
   if (hv('d_temps_reel') === 'oui') s += 2;
   const pl = rv('d_plage');
   if (pl === '24x7') s += 2; else if (pl === 'heures-ouvrables') s += 1;
   const nb = nv('d_nb_processus');
   if (nb > 5) s += 2; else if (nb > 2) s += 1;
   if (hv('d_externes') === 'oui') s += 1;
-  return Math.min(4, Math.max(1, Math.round(s * 4 / 17)));
+  // Normaliser sur 1-4 (max ~15)
+  return Math.min(4, Math.max(1, Math.round(s * 4 / 15)));
 }
 
 function riskTag(impact, prob) {
