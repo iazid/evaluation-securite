@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Évaluation Sécurité — Questionnaire CID</title>
+<style>
+  :root {
+    --primary: #1e3a5f;
+    --primary-light: #2c5282;
+    --accent: #e2e8f0;
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --border: #cbd5e0;
+    --text: #1a202c;
+    --text-muted: #718096;
+    --green: #38a169;
+    --yellow: #d69e2e;
+    --orange: #dd6b20;
+    --red: #e53e3e;
+    --conf-color: #3182ce;
+    --integ-color: #d69e2e;
+    --dispo-color: #e53e3e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+  header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 40px 20px; text-align: center; margin-bottom: 30px; border-radius: 12px; }
+  header h1 { font-size: 1.8em; margin-bottom: 8px; }
+  header p { opacity: 0.85; font-size: 0.95em; }
+
+  .progress-bar { background: var(--accent); border-radius: 8px; height: 8px; margin-bottom: 30px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--conf-color), var(--integ-color), var(--dispo-color)); border-radius: 8px; transition: width 0.4s ease; }
+
+  .step-indicators { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; flex-wrap: wrap; }
+  .step-dot { padding: 6px 16px; border-radius: 20px; font-size: 0.8em; font-weight: 600; background: var(--accent); color: var(--text-muted); transition: all 0.3s; cursor: pointer; border: 2px solid transparent; }
+  .step-dot.active { background: var(--primary); color: white; }
+  .step-dot.done { background: var(--green); color: white; }
+
+  .section { background: var(--card); border-radius: 12px; padding: 30px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); display: none; }
+  .section.visible { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--accent); }
+  .section-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3em; color: white; }
+  .icon-ctx { background: var(--primary); }
+  .icon-c { background: var(--conf-color); }
+  .icon-i { background: var(--integ-color); }
+  .icon-d { background: var(--dispo-color); }
+  .section-header h2 { font-size: 1.2em; }
+  .section-header p { font-size: 0.85em; color: var(--text-muted); }
+
+  .question-group { margin-bottom: 22px; }
+  .question-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.95em; }
+  .question-group .hint { font-size: 0.82em; color: var(--text-muted); margin-bottom: 8px; }
+
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 0.95em; font-family: inherit; background: var(--bg); transition: border-color 0.2s;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30,58,95,0.1); }
+  textarea { resize: vertical; min-height: 70px; }
+
+  .radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .radio-option { position: relative; }
+  .radio-option input { position: absolute; opacity: 0; }
+  .radio-option label {
+    display: block; padding: 8px 18px; border: 2px solid var(--border); border-radius: 8px;
+    cursor: pointer; font-size: 0.9em; transition: all 0.2s; font-weight: 500;
+  }
+  .radio-option input:checked + label { border-color: var(--primary); background: rgba(30,58,95,0.06); color: var(--primary); }
+  .radio-option label:hover { border-color: var(--primary-light); }
+
+  .yn-group { display: flex; gap: 8px; }
+  .yn-btn { padding: 8px 24px; border: 2px solid var(--border); border-radius: 8px; background: white; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: all 0.2s; }
+  .yn-btn:hover { border-color: var(--primary-light); }
+  .yn-btn.selected-yes { border-color: var(--green); background: rgba(56,161,105,0.08); color: var(--green); }
+  .yn-btn.selected-no { border-color: var(--red); background: rgba(229,62,62,0.08); color: var(--red); }
+
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 24px; }
+  .btn { padding: 12px 28px; border: none; border-radius: 8px; font-size: 0.95em; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-light); }
+  .btn-secondary { background: var(--accent); color: var(--text); }
+  .btn-secondary:hover { background: #e2e8f0; }
+  .btn-success { background: var(--green); color: white; }
+  .btn-success:hover { background: #2f855a; }
+
+  /* Results */
+  #results { display: none; }
+  #results.visible { display: block; animation: fadeIn 0.5s ease; }
+
+  .scores-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 30px; }
+  .score-card { background: var(--card); border-radius: 12px; padding: 20px; text-align: center; border: 2px solid var(--border); }
+  .score-card h3 { font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .score-card .score-value { font-size: 2.2em; font-weight: 700; }
+  .score-card .score-label { font-size: 0.8em; color: var(--text-muted); margin-top: 4px; }
+  .score-card.conf { border-color: var(--conf-color); }
+  .score-card.conf h3, .score-card.conf .score-value { color: var(--conf-color); }
+  .score-card.integ { border-color: var(--integ-color); }
+  .score-card.integ h3, .score-card.integ .score-value { color: var(--integ-color); }
+  .score-card.dispo { border-color: var(--dispo-color); }
+  .score-card.dispo h3, .score-card.dispo .score-value { color: var(--dispo-color); }
+
+  .matrix-container { background: var(--card); border-radius: 12px; padding: 30px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .matrix-container h2 { text-align: center; margin-bottom: 20px; }
+
+  .matrix-wrapper { display: flex; align-items: stretch; justify-content: center; gap: 0; }
+  .y-label { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 700; font-size: 0.9em; display: flex; align-items: center; justify-content: center; padding-right: 10px; color: var(--text-muted); }
+
+  .matrix-grid-area { display: flex; flex-direction: column; align-items: center; }
+  .matrix-grid { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); width: 400px; height: 400px; border: 2px solid var(--text); position: relative; }
+  .matrix-cell { border: 1px solid rgba(0,0,0,0.1); position: relative; }
+
+  .x-label { font-weight: 700; font-size: 0.9em; text-align: center; padding-top: 10px; color: var(--text-muted); }
+
+  .y-ticks { display: flex; flex-direction: column-reverse; justify-content: space-around; padding-right: 6px; font-size: 0.75em; color: var(--text-muted); height: 400px; }
+  .x-ticks { display: flex; justify-content: space-around; font-size: 0.75em; color: var(--text-muted); width: 400px; padding-top: 4px; margin-left: auto; }
+
+  .cid-point {
+    position: absolute; width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.85em; color: white;
+    transform: translate(-50%, 50%); z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: all 0.5s ease;
+  }
+  .point-c { background: var(--conf-color); }
+  .point-i { background: var(--integ-color); }
+  .point-d { background: var(--dispo-color); }
+
+  .legend { display: flex; justify-content: center; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.85em; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 50%; }
+
+  .detail-section { margin-top: 30px; background: var(--card); border-radius: 12px; padding: 24px; border: 1px solid var(--border); }
+  .detail-section h3 { margin-bottom: 16px; }
+  .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--accent); font-size: 0.9em; }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { color: var(--text-muted); }
+
+  .risk-level { display: inline-block; padding: 2px 10px; border-radius: 4px; font-weight: 600; font-size: 0.85em; }
+  .risk-faible { background: rgba(56,161,105,0.15); color: var(--green); }
+  .risk-modere { background: rgba(214,158,46,0.15); color: var(--yellow); }
+  .risk-eleve { background: rgba(221,107,32,0.15); color: var(--orange); }
+  .risk-critique { background: rgba(229,62,62,0.15); color: var(--red); }
+
+  .print-btn { margin-top: 20px; }
+
+  @media print {
+    header { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .btn, .step-indicators, .progress-bar, .nav-buttons, .print-btn { display: none !important; }
+    .section, #results { display: block !important; page-break-inside: avoid; }
+    .matrix-cell, .cid-point, .score-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 600px) {
+    .scores-grid { grid-template-columns: 1fr; }
+    .matrix-grid { width: 300px; height: 300px; }
+    .y-ticks { height: 300px; }
+    .x-ticks { width: 300px; }
+    .container { padding: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Évaluation Sécurité — Analyse CID</h1>
+    <p>Questionnaire d'évaluation de la sécurité d'une solution informatique</p>
+  </header>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+
+  <div class="step-indicators" id="stepIndicators">
+    <span class="step-dot active" data-step="0">1. Contexte</span>
+    <span class="step-dot" data-step="1">2. Confidentialité</span>
+    <span class="step-dot" data-step="2">3. Intégrité</span>
+    <span class="step-dot" data-step="3">4. Disponibilité</span>
+    <span class="step-dot" data-step="4">5. Résultats</span>
+  </div>
+
+  <!-- SECTION 0 : CONTEXTE -->
+  <div class="section visible" id="section-0">
+    <div class="section-header">
+      <div class="section-icon icon-ctx">📋</div>
+      <div><h2>Contexte de la solution</h2><p>Informations générales pour qualifier la solution</p></div>
+    </div>
+
+    <div class="question-group">
+      <label for="ctx_nom">Nom de la solution</label>
+      <input type="text" id="ctx_nom" placeholder="Ex : SAP RH, Salesforce, Outil interne XYZ…">
+    </div>
+
+    <div class="question-group">
+      <label for="ctx_description">Description fonctionnelle</label>
+      <div class="hint">À quoi sert cette solution ? Quel processus métier supporte-t-elle ?</div>
+      <textarea id="ctx_description" placeholder="Décrivez brièvement l'utilité de la solution…"></textarea>
+    </div>
+
+    <div class="question-group">
+      <label for="ctx_direction">Direction / entité métier responsable</label>
+      <input type="text" id="ctx_direction" placeholder="Ex : Direction Financière, DSI, RH…">
+    </div>
+
+    <div class="question-group">
+      <label>Type d'hébergement</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="ctx_hebergement" id="heb1" value="on-premise"><label for="heb1">On-premise</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_hebergement" id="heb2" value="cloud-prive"><label for="heb2">Cloud privé</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_hebergement" id="heb3" value="cloud-public"><label for="heb3">Cloud public</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_hebergement" id="heb4" value="saas"><label for="heb4">SaaS</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_hebergement" id="heb5" value="hybride"><label for="heb5">Hybride</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label>La solution est-elle exposée sur Internet ?</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="ctx_internet" id="int1" value="oui"><label for="int1">Oui</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_internet" id="int2" value="vpn"><label for="int2">Via VPN uniquement</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_internet" id="int3" value="non"><label for="int3">Non (réseau interne)</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label for="ctx_utilisateurs">Nombre approximatif d'utilisateurs</label>
+      <input type="number" id="ctx_utilisateurs" placeholder="Ex : 150" min="0">
+    </div>
+
+    <div class="question-group">
+      <label>Profil des utilisateurs</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="ctx_profil" id="prof1" value="internes"><label for="prof1">Internes uniquement</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_profil" id="prof2" value="externes"><label for="prof2">Externes uniquement</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_profil" id="prof3" value="mixte"><label for="prof3">Mixte (internes + externes)</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label>Types de données traitées</label>
+      <div class="hint">Sélectionnez les types de données manipulées par la solution</div>
+      <div class="radio-group">
+        <div class="radio-option"><input type="checkbox" id="data1" value="personnelles"><label for="data1">Données personnelles</label></div>
+        <div class="radio-option"><input type="checkbox" id="data2" value="sensibles"><label for="data2">Données sensibles (santé, judiciaire…)</label></div>
+        <div class="radio-option"><input type="checkbox" id="data3" value="financieres"><label for="data3">Données financières</label></div>
+        <div class="radio-option"><input type="checkbox" id="data4" value="strategiques"><label for="data4">Données stratégiques / PI</label></div>
+        <div class="radio-option"><input type="checkbox" id="data5" value="publiques"><label for="data5">Données publiques</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label>La solution échange-t-elle des données avec d'autres applications ?</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="ctx_integration" id="integ1" value="oui-critique"><label for="integ1">Oui, avec des systèmes critiques</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_integration" id="integ2" value="oui-non-critique"><label for="integ2">Oui, avec des systèmes non critiques</label></div>
+        <div class="radio-option"><input type="radio" name="ctx_integration" id="integ3" value="non"><label for="integ3">Non, solution isolée</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label for="ctx_nb_integrations">Si oui, combien d'intégrations / flux ?</label>
+      <input type="number" id="ctx_nb_integrations" placeholder="Ex : 5" min="0">
+    </div>
+
+    <div class="nav-buttons">
+      <span></span>
+      <button class="btn btn-primary" onclick="nextStep()">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 1 : CONFIDENTIALITÉ -->
+  <div class="section" id="section-1">
+    <div class="section-header">
+      <div class="section-icon icon-c">🔒</div>
+      <div><h2>Confidentialité</h2><p>Évaluation des risques liés à une fuite ou un accès non autorisé aux données</p></div>
+    </div>
+
+    <div class="question-group">
+      <label>En cas de fuite de données, quel serait l'impact sur l'organisation ?</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="c_impact_fuite" id="cf1" value="1"><label for="cf1">Négligeable</label></div>
+        <div class="radio-option"><input type="radio" name="c_impact_fuite" id="cf2" value="2"><label for="cf2">Mineur</label></div>
+        <div class="radio-option"><input type="radio" name="c_impact_fuite" id="cf3" value="3"><label for="cf3">Significatif</label></div>
+        <div class="radio-option"><input type="radio" name="c_impact_fuite" id="cf4" value="4"><label for="cf4">Critique</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label>La solution traite-t-elle des données soumises à des réglementations (RGPD, PCI-DSS, HDS…) ?</label>
+      <div id="yn_c_reglementation" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="c_reglementation" value="">
+    </div>
+
+    <div class="question-group">
+      <label>Existe-t-il un mécanisme de contrôle d'accès (authentification, habilitations) ?</label>
+      <div id="yn_c_controle_acces" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="c_controle_acces" value="">
+    </div>
+
+    <div class="question-group">
+      <label>Les données sont-elles chiffrées (au repos et/ou en transit) ?</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="c_chiffrement" id="cc1" value="aucun"><label for="cc1">Aucun chiffrement</label></div>
+        <div class="radio-option"><input type="radio" name="c_chiffrement" id="cc2" value="transit"><label for="cc2">En transit uniquement</label></div>
+        <div class="radio-option"><input type="radio" name="c_chiffrement" id="cc3" value="repos"><label for="cc3">Au repos uniquement</label></div>
+        <div class="radio-option"><input type="radio" name="c_chiffrement" id="cc4" value="les-deux"><label for="cc4">Les deux</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label>En cas de fuite, y a-t-il un risque d'impact juridique ou de sanctions ?</label>
+      <div id="yn_c_juridique" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="c_juridique" value="">
+    </div>
+
+    <div class="question-group">
+      <label>En cas de fuite, y a-t-il un risque d'impact sur l'image / la réputation ?</label>
+      <div id="yn_c_reputation" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="c_reputation" value="">
+    </div>
+
+    <div class="question-group">
+      <label for="c_nb_personnes">Nombre de personnes dont les données personnelles sont stockées</label>
+      <div class="hint">0 si non applicable</div>
+      <input type="number" id="c_nb_personnes" placeholder="Ex : 10000" min="0">
+    </div>
+
+    <div class="question-group">
+      <label>La solution permet-elle des actions financières (paiements, virements, engagements) ?</label>
+      <div id="yn_c_financier" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="c_financier" value="">
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">← Précédent</button>
+      <button class="btn btn-primary" onclick="nextStep()">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 2 : INTÉGRITÉ -->
+  <div class="section" id="section-2">
+    <div class="section-header">
+      <div class="section-icon icon-i">✏️</div>
+      <div><h2>Intégrité</h2><p>Évaluation des risques liés à l'altération ou la falsification des données</p></div>
+    </div>
+
+    <div class="question-group">
+      <label>En cas de données fausses ou altérées, quel serait l'impact sur l'activité ?</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="i_impact_alteration" id="ia1" value="1"><label for="ia1">Négligeable</label></div>
+        <div class="radio-option"><input type="radio" name="i_impact_alteration" id="ia2" value="2"><label for="ia2">Mineur</label></div>
+        <div class="radio-option"><input type="radio" name="i_impact_alteration" id="ia3" value="3"><label for="ia3">Significatif</label></div>
+        <div class="radio-option"><input type="radio" name="i_impact_alteration" id="ia4" value="4"><label for="ia4">Critique</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label>Les données de la solution alimentent-elles des décisions stratégiques ou réglementaires ?</label>
+      <div id="yn_i_decisions" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="i_decisions" value="">
+    </div>
+
+    <div class="question-group">
+      <label>Existe-t-il des contrôles de cohérence ou de validation des données saisies ?</label>
+      <div id="yn_i_controles" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="i_controles" value="">
+    </div>
+
+    <div class="question-group">
+      <label>Existe-t-il une traçabilité / piste d'audit sur les modifications ?</label>
+      <div id="yn_i_audit" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="i_audit" value="">
+    </div>
+
+    <div class="question-group">
+      <label>Une donnée erronée pourrait-elle entraîner des pertes financières directes ?</label>
+      <div id="yn_i_pertes" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="i_pertes" value="">
+    </div>
+
+    <div class="question-group">
+      <label>Une donnée erronée pourrait-elle mettre en danger des personnes (santé, sécurité physique) ?</label>
+      <div id="yn_i_danger" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="i_danger" value="">
+    </div>
+
+    <div class="question-group">
+      <label>La solution fait-elle l'objet de processus de double validation ou de séparation des tâches ?</label>
+      <div id="yn_i_separation" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="i_separation" value="">
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">← Précédent</button>
+      <button class="btn btn-primary" onclick="nextStep()">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 3 : DISPONIBILITÉ -->
+  <div class="section" id="section-3">
+    <div class="section-header">
+      <div class="section-icon icon-d">⚡</div>
+      <div><h2>Disponibilité</h2><p>Évaluation des risques liés à l'indisponibilité de la solution</p></div>
+    </div>
+
+    <div class="question-group">
+      <label>Quelle est la tolérance maximale à l'indisponibilité de la solution ?</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="d_tolerance" id="dt1" value="4h"><label for="dt1">< 4 heures</label></div>
+        <div class="radio-option"><input type="radio" name="d_tolerance" id="dt2" value="1j"><label for="dt2">< 1 jour</label></div>
+        <div class="radio-option"><input type="radio" name="d_tolerance" id="dt3" value="3j"><label for="dt3">< 3 jours</label></div>
+        <div class="radio-option"><input type="radio" name="d_tolerance" id="dt4" value="1s"><label for="dt4">< 1 semaine</label></div>
+        <div class="radio-option"><input type="radio" name="d_tolerance" id="dt5" value="plus"><label for="dt5">> 1 semaine</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label>En cas d'indisponibilité, quel serait l'impact sur l'activité ?</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="d_impact" id="di1" value="1"><label for="di1">Négligeable</label></div>
+        <div class="radio-option"><input type="radio" name="d_impact" id="di2" value="2"><label for="di2">Mineur</label></div>
+        <div class="radio-option"><input type="radio" name="d_impact" id="di3" value="3"><label for="di3">Significatif</label></div>
+        <div class="radio-option"><input type="radio" name="d_impact" id="di4" value="4"><label for="di4">Critique</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label>Existe-t-il un mode dégradé ou une procédure de continuité manuelle ?</label>
+      <div id="yn_d_degrade" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="d_degrade" value="">
+    </div>
+
+    <div class="question-group">
+      <label>La solution dispose-t-elle d'un plan de reprise d'activité (PRA) ?</label>
+      <div id="yn_d_pra" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="d_pra" value="">
+    </div>
+
+    <div class="question-group">
+      <label>La solution est-elle utilisée dans des processus temps-réel ou critiques ?</label>
+      <div id="yn_d_temps_reel" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="d_temps_reel" value="">
+    </div>
+
+    <div class="question-group">
+      <label>La plage de fonctionnement requise est :</label>
+      <div class="radio-group">
+        <div class="radio-option"><input type="radio" name="d_plage" id="dp1" value="24x7"><label for="dp1">24/7</label></div>
+        <div class="radio-option"><input type="radio" name="d_plage" id="dp2" value="heures-ouvrables"><label for="dp2">Heures ouvrables</label></div>
+        <div class="radio-option"><input type="radio" name="d_plage" id="dp3" value="periodique"><label for="dp3">Périodique / batch</label></div>
+      </div>
+    </div>
+
+    <div class="question-group">
+      <label>Combien de processus métier dépendent directement de cette solution ?</label>
+      <input type="number" id="d_nb_processus" placeholder="Ex : 3" min="0">
+    </div>
+
+    <div class="question-group">
+      <label>L'indisponibilité pourrait-elle impacter des clients ou partenaires externes ?</label>
+      <div id="yn_d_externes" class="yn-group">
+        <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
+        <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
+      </div>
+      <input type="hidden" id="d_externes" value="">
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">← Précédent</button>
+      <button class="btn btn-success" onclick="calculateResults()">Calculer les résultats →</button>
+    </div>
+  </div>
+
+  <!-- RÉSULTATS -->
+  <div id="results">
+    <div class="section-header" style="margin-bottom: 24px;">
+      <div class="section-icon" style="background: var(--green);">📊</div>
+      <div><h2>Résultats de l'évaluation</h2><p id="results-solution-name"></p></div>
+    </div>
+
+    <div class="scores-grid">
+      <div class="score-card conf">
+        <h3>Confidentialité</h3>
+        <div class="score-value" id="score-c-val">-</div>
+        <div class="score-label" id="score-c-label">-</div>
+      </div>
+      <div class="score-card integ">
+        <h3>Intégrité</h3>
+        <div class="score-value" id="score-i-val">-</div>
+        <div class="score-label" id="score-i-label">-</div>
+      </div>
+      <div class="score-card dispo">
+        <h3>Disponibilité</h3>
+        <div class="score-value" id="score-d-val">-</div>
+        <div class="score-label" id="score-d-label">-</div>
+      </div>
+    </div>
+
+    <div class="matrix-container">
+      <h2>Matrice Impact × Probabilité</h2>
+      <div class="matrix-wrapper">
+        <div class="y-label">IMPACT →</div>
+        <div class="y-ticks">
+          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+        </div>
+        <div class="matrix-grid-area">
+          <div class="matrix-grid" id="matrixGrid">
+            <!-- 5x5 cells, row 0 = top (impact 5), row 4 = bottom (impact 1) -->
+          </div>
+          <div class="x-ticks">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+          </div>
+          <div class="x-label">PROBABILITÉ →</div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--conf-color)"></div> Confidentialité (C)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--integ-color)"></div> Intégrité (I)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--dispo-color)"></div> Disponibilité (D)</div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Détail du scoring</h3>
+      <div id="scoring-details"></div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Synthèse du contexte</h3>
+      <div id="context-summary"></div>
+    </div>
+
+    <div style="text-align: center; margin-top: 24px;">
+      <button class="btn btn-secondary print-btn" onclick="window.print()">🖨️ Imprimer / Exporter PDF</button>
+      <button class="btn btn-secondary print-btn" onclick="resetForm()" style="margin-left:8px;">↺ Nouvelle évaluation</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentStep = 0;
+const totalSteps = 4; // 0-3 are form sections, 4 is results
+
+function updateUI() {
+  for (let i = 0; i <= 3; i++) {
+    const sec = document.getElementById('section-' + i);
+    sec.classList.toggle('visible', i === currentStep);
+  }
+  const dots = document.querySelectorAll('.step-dot');
+  dots.forEach((d, idx) => {
+    d.classList.remove('active', 'done');
+    if (idx === currentStep) d.classList.add('active');
+    else if (idx < currentStep) d.classList.add('done');
+  });
+  document.getElementById('progressFill').style.width = ((currentStep) / totalSteps * 100) + '%';
+}
+
+document.querySelectorAll('.step-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    const step = parseInt(dot.dataset.step);
+    if (step <= 3) { currentStep = step; updateUI(); }
+    if (step === 4) calculateResults();
+  });
+});
+
+function nextStep() { if (currentStep < 3) { currentStep++; updateUI(); window.scrollTo({top: 0, behavior: 'smooth'}); } }
+function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); window.scrollTo({top: 0, behavior: 'smooth'}); } }
+
+function setYN(btn, val) {
+  const group = btn.parentElement;
+  const hiddenId = group.id.replace('yn_', '');
+  document.getElementById(hiddenId).value = val;
+  group.querySelectorAll('.yn-btn').forEach(b => { b.classList.remove('selected-yes', 'selected-no'); });
+  btn.classList.add(val === 'oui' ? 'selected-yes' : 'selected-no');
+}
+
+function getRadioVal(name) {
+  const el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : null;
+}
+function getHiddenVal(id) { return document.getElementById(id).value; }
+function getNumVal(id) { return parseInt(document.getElementById(id).value) || 0; }
+function getCheckboxVals(ids) { return ids.filter(id => document.getElementById(id).checked).map(id => document.getElementById(id).value); }
+
+// ===== SCORING FORMULAS =====
+
+function calcProbability() {
+  let score = 1; // base
+
+  // Exposition Internet
+  const internet = getRadioVal('ctx_internet');
+  if (internet === 'oui') score += 2;
+  else if (internet === 'vpn') score += 1;
+
+  // Hébergement
+  const heb = getRadioVal('ctx_hebergement');
+  if (heb === 'saas' || heb === 'cloud-public') score += 1;
+
+  // Nombre d'utilisateurs (attractivité)
+  const nbUsers = getNumVal('ctx_utilisateurs');
+  if (nbUsers > 1000) score += 2;
+  else if (nbUsers > 100) score += 1;
+
+  // Utilisateurs externes
+  const profil = getRadioVal('ctx_profil');
+  if (profil === 'externes' || profil === 'mixte') score += 1;
+
+  // Données sensibles (attractivité)
+  const dataTypes = getCheckboxVals(['data1','data2','data3','data4','data5']);
+  if (dataTypes.includes('sensibles') || dataTypes.includes('financieres')) score += 1;
+  if (dataTypes.includes('strategiques')) score += 1;
+
+  // Intégrations
+  const integ = getRadioVal('ctx_integration');
+  if (integ === 'oui-critique') score += 1;
+
+  // Normaliser sur 1-5
+  return Math.min(5, Math.max(1, Math.round(score * 5 / 10)));
+}
+
+function calcConfidentialityImpact() {
+  let score = 0;
+
+  // Impact fuite (direct, poids fort)
+  const impactFuite = parseInt(getRadioVal('c_impact_fuite') || '0');
+  score += impactFuite * 2;
+
+  // Réglementation
+  if (getHiddenVal('c_reglementation') === 'oui') score += 2;
+
+  // Pas de contrôle d'accès = aggravant
+  if (getHiddenVal('c_controle_acces') === 'non') score += 1;
+
+  // Chiffrement
+  const chiffrement = getRadioVal('c_chiffrement');
+  if (chiffrement === 'aucun') score += 2;
+  else if (chiffrement === 'transit' || chiffrement === 'repos') score += 1;
+
+  // Juridique
+  if (getHiddenVal('c_juridique') === 'oui') score += 2;
+
+  // Réputation
+  if (getHiddenVal('c_reputation') === 'oui') score += 1;
+
+  // Volume personnes
+  const nbPers = getNumVal('c_nb_personnes');
+  if (nbPers > 10000) score += 2;
+  else if (nbPers > 1000) score += 1;
+
+  // Financier
+  if (getHiddenVal('c_financier') === 'oui') score += 1;
+
+  // Normaliser 1-5 (max possible ~14)
+  return Math.min(5, Math.max(1, Math.round(score * 5 / 14)));
+}
+
+function calcIntegrityImpact() {
+  let score = 0;
+
+  const impactAlt = parseInt(getRadioVal('i_impact_alteration') || '0');
+  score += impactAlt * 2;
+
+  if (getHiddenVal('i_decisions') === 'oui') score += 2;
+  if (getHiddenVal('i_controles') === 'non') score += 1;
+  if (getHiddenVal('i_audit') === 'non') score += 1;
+  if (getHiddenVal('i_pertes') === 'oui') score += 2;
+  if (getHiddenVal('i_danger') === 'oui') score += 3;
+  if (getHiddenVal('i_separation') === 'non') score += 1;
+
+  // Normaliser 1-5 (max ~16)
+  return Math.min(5, Math.max(1, Math.round(score * 5 / 16)));
+}
+
+function calcDisponibilityImpact() {
+  let score = 0;
+
+  // Tolérance arrêt
+  const tol = getRadioVal('d_tolerance');
+  if (tol === '4h') score += 4;
+  else if (tol === '1j') score += 3;
+  else if (tol === '3j') score += 2;
+  else if (tol === '1s') score += 1;
+
+  // Impact indisponibilité
+  const impactD = parseInt(getRadioVal('d_impact') || '0');
+  score += impactD * 2;
+
+  if (getHiddenVal('d_degrade') === 'non') score += 1;
+  if (getHiddenVal('d_pra') === 'non') score += 1;
+  if (getHiddenVal('d_temps_reel') === 'oui') score += 2;
+
+  const plage = getRadioVal('d_plage');
+  if (plage === '24x7') score += 2;
+  else if (plage === 'heures-ouvrables') score += 1;
+
+  const nbProc = getNumVal('d_nb_processus');
+  if (nbProc > 5) score += 2;
+  else if (nbProc > 2) score += 1;
+
+  if (getHiddenVal('d_externes') === 'oui') score += 1;
+
+  // Normaliser 1-5 (max ~17)
+  return Math.min(5, Math.max(1, Math.round(score * 5 / 17)));
+}
+
+function riskLabel(impact, proba) {
+  const r = impact * proba;
+  if (r <= 4) return { text: 'Faible', cls: 'risk-faible' };
+  if (r <= 9) return { text: 'Modéré', cls: 'risk-modere' };
+  if (r <= 16) return { text: 'Élevé', cls: 'risk-eleve' };
+  return { text: 'Critique', cls: 'risk-critique' };
+}
+
+function buildMatrix() {
+  const grid = document.getElementById('matrixGrid');
+  grid.innerHTML = '';
+  // Colors for the 5x5 risk matrix
+  const colors = [
+    // row 0 = impact 5 (top)
+    ['#fbd38d','#f6ad55','#ed8936','#e53e3e','#c53030'],
+    ['#fefcbf','#fbd38d','#f6ad55','#ed8936','#e53e3e'],
+    ['#c6f6d5','#fefcbf','#fbd38d','#f6ad55','#ed8936'],
+    ['#9ae6b4','#c6f6d5','#fefcbf','#fbd38d','#f6ad55'],
+    // row 4 = impact 1 (bottom)
+    ['#68d391','#9ae6b4','#c6f6d5','#fefcbf','#fbd38d'],
+  ];
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'matrix-cell';
+      cell.style.background = colors[r][c];
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function placePoint(letter, cls, impact, proba) {
+  const grid = document.getElementById('matrixGrid');
+  const cellW = grid.offsetWidth / 5;
+  const cellH = grid.offsetHeight / 5;
+  const pt = document.createElement('div');
+  pt.className = 'cid-point ' + cls;
+  pt.textContent = letter;
+  // proba on x-axis (1-5, left to right), impact on y-axis (1-5, bottom to top)
+  pt.style.left = ((proba - 0.5) * cellW) + 'px';
+  pt.style.bottom = ((impact - 0.5) * cellH) + 'px';
+  grid.appendChild(pt);
+}
+
+function calculateResults() {
+  const prob = calcProbability();
+  const cImpact = calcConfidentialityImpact();
+  const iImpact = calcIntegrityImpact();
+  const dImpact = calcDisponibilityImpact();
+
+  const cRisk = riskLabel(cImpact, prob);
+  const iRisk = riskLabel(iImpact, prob);
+  const dRisk = riskLabel(dImpact, prob);
+
+  // Update score cards
+  document.getElementById('score-c-val').textContent = cImpact + '/5';
+  document.getElementById('score-c-label').innerHTML = 'Impact × Probabilité(' + prob + ') = <span class="risk-level ' + cRisk.cls + '">' + cRisk.text + '</span>';
+  document.getElementById('score-i-val').textContent = iImpact + '/5';
+  document.getElementById('score-i-label').innerHTML = 'Impact × Probabilité(' + prob + ') = <span class="risk-level ' + iRisk.cls + '">' + iRisk.text + '</span>';
+  document.getElementById('score-d-val').textContent = dImpact + '/5';
+  document.getElementById('score-d-label').innerHTML = 'Impact × Probabilité(' + prob + ') = <span class="risk-level ' + dRisk.cls + '">' + dRisk.text + '</span>';
+
+  // Solution name
+  const nom = document.getElementById('ctx_nom').value || 'Solution non nommée';
+  document.getElementById('results-solution-name').textContent = 'Solution : ' + nom;
+
+  // Build matrix
+  buildMatrix();
+  placePoint('C', 'point-c', cImpact, prob);
+  placePoint('I', 'point-i', iImpact, prob);
+  placePoint('D', 'point-d', dImpact, prob);
+
+  // Scoring details
+  const detailsHTML = `
+    <div class="detail-row"><span class="detail-label">Probabilité (exposition, attractivité)</span><span><strong>${prob}/5</strong></span></div>
+    <div class="detail-row"><span class="detail-label">Impact Confidentialité</span><span><strong>${cImpact}/5</strong> — Risque : <span class="risk-level ${cRisk.cls}">${cRisk.text}</span></span></div>
+    <div class="detail-row"><span class="detail-label">Impact Intégrité</span><span><strong>${iImpact}/5</strong> — Risque : <span class="risk-level ${iRisk.cls}">${iRisk.text}</span></span></div>
+    <div class="detail-row"><span class="detail-label">Impact Disponibilité</span><span><strong>${dImpact}/5</strong> — Risque : <span class="risk-level ${dRisk.cls}">${dRisk.text}</span></span></div>
+  `;
+  document.getElementById('scoring-details').innerHTML = detailsHTML;
+
+  // Context summary
+  const heb = getRadioVal('ctx_hebergement') || '-';
+  const inter = getRadioVal('ctx_internet') || '-';
+  const prof = getRadioVal('ctx_profil') || '-';
+  const dataTypes = getCheckboxVals(['data1','data2','data3','data4','data5']);
+  const ctxHTML = `
+    <div class="detail-row"><span class="detail-label">Solution</span><span>${nom}</span></div>
+    <div class="detail-row"><span class="detail-label">Direction</span><span>${document.getElementById('ctx_direction').value || '-'}</span></div>
+    <div class="detail-row"><span class="detail-label">Hébergement</span><span>${heb}</span></div>
+    <div class="detail-row"><span class="detail-label">Exposition Internet</span><span>${inter}</span></div>
+    <div class="detail-row"><span class="detail-label">Utilisateurs</span><span>${getNumVal('ctx_utilisateurs') || '-'} (${prof})</span></div>
+    <div class="detail-row"><span class="detail-label">Types de données</span><span>${dataTypes.length ? dataTypes.join(', ') : '-'}</span></div>
+    <div class="detail-row"><span class="detail-label">Intégrations</span><span>${getRadioVal('ctx_integration') || '-'}</span></div>
+  `;
+  document.getElementById('context-summary').innerHTML = ctxHTML;
+
+  // Show results, hide form
+  for (let i = 0; i <= 3; i++) document.getElementById('section-' + i).classList.remove('visible');
+  document.getElementById('results').classList.add('visible');
+  currentStep = 4;
+  document.getElementById('progressFill').style.width = '100%';
+  const dots = document.querySelectorAll('.step-dot');
+  dots.forEach((d, idx) => { d.classList.remove('active', 'done'); if (idx < 4) d.classList.add('done'); else d.classList.add('active'); });
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function resetForm() {
+  document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => el.value = '');
+  document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => el.checked = false);
+  document.querySelectorAll('input[type="hidden"]').forEach(el => el.value = '');
+  document.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('selected-yes', 'selected-no'));
+  document.getElementById('results').classList.remove('visible');
+  currentStep = 0;
+  updateUI();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Init matrix on load
+buildMatrix();
+</script>
+</body>
+</html>
