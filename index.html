@@ -173,22 +173,14 @@ textarea { resize: vertical; min-height: 64px; }
   font-size: 11px; font-weight: 600; color: var(--text-secondary);
   display: flex; align-items: center; padding-right: 8px; letter-spacing: 0.5px;
 }
-.m-yticks {
-  display: flex; flex-direction: column-reverse; justify-content: space-around;
-  font-size: 11px; color: var(--neutral); height: 360px; padding-right: 6px;
-  font-variant-numeric: tabular-nums;
-}
+.m-yticks { display: none; }
 .m-core { display: flex; flex-direction: column; align-items: center; }
 .m-grid {
   display: grid; grid-template-columns: repeat(4,1fr); grid-template-rows: repeat(4,1fr);
   width: 360px; height: 360px; border: 1px solid var(--text); position: relative;
 }
 .m-cell { border: 1px solid rgba(0,0,0,0.06); }
-.m-xticks {
-  display: flex; justify-content: space-around; width: 360px;
-  font-size: 11px; color: var(--neutral); padding-top: 4px;
-  font-variant-numeric: tabular-nums;
-}
+.m-xticks { display: none; }
 .m-xlabel {
   font-size: 11px; font-weight: 600; color: var(--text-secondary);
   text-align: center; padding-top: 8px; letter-spacing: 0.5px;
@@ -586,10 +578,10 @@ textarea { resize: vertical; min-height: 64px; }
       <h3>Matrice Impact / Probabilite</h3>
       <div class="matrix-layout">
         <div class="m-ylabel">Impact</div>
-        <div class="m-yticks"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+        <div class="m-yticks"></div>
         <div class="m-core">
           <div class="m-grid" id="mGrid"></div>
-          <div class="m-xticks"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+          <div class="m-xticks"></div>
           <div class="m-xlabel">Probabilite</div>
         </div>
       </div>
@@ -741,13 +733,21 @@ function buildGrid() {
     }
 }
 
+const _placed = [];
 function dot(letter, cls, impact, prob) {
   const g = document.getElementById('mGrid');
   const cw = g.offsetWidth / 4, ch = g.offsetHeight / 4;
+  // check how many points already sit on this cell
+  let offset = 0;
+  for (const pt of _placed) {
+    if (pt.impact === impact && pt.prob === prob) offset++;
+  }
+  _placed.push({ impact, prob });
+  const ox = offset * 22;  // shift right for each overlap
   const p = document.createElement('div');
   p.className = 'cid-pt ' + cls;
   p.textContent = letter;
-  p.style.left = ((prob - 0.5) * cw) + 'px';
+  p.style.left = ((prob - 0.5) * cw + ox) + 'px';
   p.style.bottom = ((impact - 0.5) * ch) + 'px';
   g.appendChild(p);
 }
@@ -767,6 +767,7 @@ function compute() {
   document.getElementById('res-name').textContent = nom;
 
   buildGrid();
+  _placed.length = 0;
   dot('C', 'pt-c', ci, prob);
   dot('I', 'pt-i', ii, prob);
   dot('D', 'pt-d', di, prob);
