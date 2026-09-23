@@ -175,17 +175,17 @@ textarea { resize: vertical; min-height: 64px; }
 }
 .m-yticks {
   display: flex; flex-direction: column-reverse; justify-content: space-around;
-  font-size: 11px; color: var(--neutral); height: 350px; padding-right: 6px;
+  font-size: 11px; color: var(--neutral); height: 360px; padding-right: 6px;
   font-variant-numeric: tabular-nums;
 }
 .m-core { display: flex; flex-direction: column; align-items: center; }
 .m-grid {
-  display: grid; grid-template-columns: repeat(5,1fr); grid-template-rows: repeat(5,1fr);
-  width: 350px; height: 350px; border: 1px solid var(--text); position: relative;
+  display: grid; grid-template-columns: repeat(4,1fr); grid-template-rows: repeat(4,1fr);
+  width: 360px; height: 360px; border: 1px solid var(--text); position: relative;
 }
 .m-cell { border: 1px solid rgba(0,0,0,0.06); }
 .m-xticks {
-  display: flex; justify-content: space-around; width: 350px;
+  display: flex; justify-content: space-around; width: 360px;
   font-size: 11px; color: var(--neutral); padding-top: 4px;
   font-variant-numeric: tabular-nums;
 }
@@ -586,10 +586,10 @@ textarea { resize: vertical; min-height: 64px; }
       <h3>Matrice Impact / Probabilite</h3>
       <div class="matrix-layout">
         <div class="m-ylabel">Impact</div>
-        <div class="m-yticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+        <div class="m-yticks"><span>1</span><span>2</span><span>3</span><span>4</span></div>
         <div class="m-core">
           <div class="m-grid" id="mGrid"></div>
-          <div class="m-xticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+          <div class="m-xticks"><span>1</span><span>2</span><span>3</span><span>4</span></div>
           <div class="m-xlabel">Probabilite</div>
         </div>
       </div>
@@ -669,7 +669,7 @@ function calcProb() {
   if (dt.includes('sensibles') || dt.includes('financieres')) s += 1;
   if (dt.includes('strategiques')) s += 1;
   if (rv('ctx_integration') === 'oui-critique') s += 1;
-  return Math.min(5, Math.max(1, Math.round(s * 5 / 10)));
+  return Math.min(4, Math.max(1, Math.round(s * 4 / 10)));
 }
 
 function calcC() {
@@ -684,7 +684,7 @@ function calcC() {
   const np = nv('c_nb_personnes');
   if (np > 10000) s += 2; else if (np > 1000) s += 1;
   if (hv('c_financier') === 'oui') s += 1;
-  return Math.min(5, Math.max(1, Math.round(s * 5 / 14)));
+  return Math.min(4, Math.max(1, Math.round(s * 4 / 14)));
 }
 
 function calcI() {
@@ -696,7 +696,7 @@ function calcI() {
   if (hv('i_pertes') === 'oui') s += 2;
   if (hv('i_danger') === 'oui') s += 3;
   if (hv('i_separation') === 'non') s += 1;
-  return Math.min(5, Math.max(1, Math.round(s * 5 / 16)));
+  return Math.min(4, Math.max(1, Math.round(s * 4 / 16)));
 }
 
 function calcD() {
@@ -712,14 +712,14 @@ function calcD() {
   const nb = nv('d_nb_processus');
   if (nb > 5) s += 2; else if (nb > 2) s += 1;
   if (hv('d_externes') === 'oui') s += 1;
-  return Math.min(5, Math.max(1, Math.round(s * 5 / 17)));
+  return Math.min(4, Math.max(1, Math.round(s * 4 / 17)));
 }
 
 function riskTag(impact, prob) {
   const r = impact * prob;
-  if (r <= 4) return { t: 'Faible', c: 'rt-low' };
-  if (r <= 9) return { t: 'Modere', c: 'rt-med' };
-  if (r <= 16) return { t: 'Eleve', c: 'rt-high' };
+  if (r <= 3) return { t: 'Faible', c: 'rt-low' };
+  if (r <= 6) return { t: 'Modere', c: 'rt-med' };
+  if (r <= 10) return { t: 'Eleve', c: 'rt-high' };
   return { t: 'Critique', c: 'rt-crit' };
 }
 
@@ -727,14 +727,13 @@ function buildGrid() {
   const g = document.getElementById('mGrid');
   g.innerHTML = '';
   const palette = [
-    ['#e8c96a','#d4a24a','#c47d3a','#b34a3a','#8b2d2d'],
-    ['#d6d980','#e8c96a','#d4a24a','#c47d3a','#b34a3a'],
-    ['#a3c47a','#d6d980','#e8c96a','#d4a24a','#c47d3a'],
-    ['#7aaa6e','#a3c47a','#d6d980','#e8c96a','#d4a24a'],
-    ['#5d8f5a','#7aaa6e','#a3c47a','#d6d980','#e8c96a'],
+    ['#d4a24a','#c47d3a','#b34a3a','#8b2d2d'],
+    ['#d6d980','#e8c96a','#c47d3a','#b34a3a'],
+    ['#a3c47a','#d6d980','#e8c96a','#d4a24a'],
+    ['#7aaa6e','#a3c47a','#d6d980','#e8c96a'],
   ];
-  for (let r = 0; r < 5; r++)
-    for (let c = 0; c < 5; c++) {
+  for (let r = 0; r < 4; r++)
+    for (let c = 0; c < 4; c++) {
       const d = document.createElement('div');
       d.className = 'm-cell';
       d.style.background = palette[r][c];
@@ -744,7 +743,7 @@ function buildGrid() {
 
 function dot(letter, cls, impact, prob) {
   const g = document.getElementById('mGrid');
-  const cw = g.offsetWidth / 5, ch = g.offsetHeight / 5;
+  const cw = g.offsetWidth / 4, ch = g.offsetHeight / 4;
   const p = document.createElement('div');
   p.className = 'cid-pt ' + cls;
   p.textContent = letter;
@@ -757,11 +756,11 @@ function compute() {
   const prob = calcProb(), ci = calcC(), ii = calcI(), di = calcD();
   const cr = riskTag(ci, prob), ir = riskTag(ii, prob), dr = riskTag(di, prob);
 
-  document.getElementById('sv-c').textContent = ci + ' / 5';
+  document.getElementById('sv-c').textContent = ci + ' / 4';
   document.getElementById('ss-c').innerHTML = 'Prob. ' + prob + ' &middot; <span class="risk-tag ' + cr.c + '">' + cr.t + '</span>';
-  document.getElementById('sv-i').textContent = ii + ' / 5';
+  document.getElementById('sv-i').textContent = ii + ' / 4';
   document.getElementById('ss-i').innerHTML = 'Prob. ' + prob + ' &middot; <span class="risk-tag ' + ir.c + '">' + ir.t + '</span>';
-  document.getElementById('sv-d').textContent = di + ' / 5';
+  document.getElementById('sv-d').textContent = di + ' / 4';
   document.getElementById('ss-d').innerHTML = 'Prob. ' + prob + ' &middot; <span class="risk-tag ' + dr.c + '">' + dr.t + '</span>';
 
   const nom = document.getElementById('ctx_nom').value || 'Solution non nommee';
@@ -773,10 +772,10 @@ function compute() {
   dot('D', 'pt-d', di, prob);
 
   document.getElementById('detail-scoring').innerHTML = `
-    <div class="d-row"><span class="d-key">Probabilite (exposition, attractivite)</span><span class="d-val">${prob} / 5</span></div>
-    <div class="d-row"><span class="d-key">Impact Confidentialite</span><span class="d-val">${ci} / 5 <span class="risk-tag ${cr.c}">${cr.t}</span></span></div>
-    <div class="d-row"><span class="d-key">Impact Integrite</span><span class="d-val">${ii} / 5 <span class="risk-tag ${ir.c}">${ir.t}</span></span></div>
-    <div class="d-row"><span class="d-key">Impact Disponibilite</span><span class="d-val">${di} / 5 <span class="risk-tag ${dr.c}">${dr.t}</span></span></div>`;
+    <div class="d-row"><span class="d-key">Probabilite (exposition, attractivite)</span><span class="d-val">${prob} / 4</span></div>
+    <div class="d-row"><span class="d-key">Impact Confidentialite</span><span class="d-val">${ci} / 4 <span class="risk-tag ${cr.c}">${cr.t}</span></span></div>
+    <div class="d-row"><span class="d-key">Impact Integrite</span><span class="d-val">${ii} / 4 <span class="risk-tag ${ir.c}">${ir.t}</span></span></div>
+    <div class="d-row"><span class="d-key">Impact Disponibilite</span><span class="d-val">${di} / 4 <span class="risk-tag ${dr.c}">${dr.t}</span></span></div>`;
 
   const dt = cvs(['data1','data2','data3','data4','data5']);
   document.getElementById('detail-ctx').innerHTML = `
