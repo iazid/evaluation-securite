@@ -173,14 +173,26 @@ textarea { resize: vertical; min-height: 64px; }
   font-size: 11px; font-weight: 600; color: var(--text-secondary);
   display: flex; align-items: center; padding-right: 8px; letter-spacing: 0.5px;
 }
-.m-yticks { display: none; }
+.m-yticks {
+  display: flex; flex-direction: column-reverse; justify-content: space-around;
+  font-size: 10px; color: var(--neutral); height: 360px; padding-right: 8px;
+  text-align: right;
+}
+.m-yticks span { line-height: 1.2; }
+.m-tick-num { font-weight: 600; color: var(--text-secondary); font-size: 11px; }
+.m-tick-label { display: block; font-weight: 400; }
 .m-core { display: flex; flex-direction: column; align-items: center; }
 .m-grid {
   display: grid; grid-template-columns: repeat(4,1fr); grid-template-rows: repeat(4,1fr);
   width: 360px; height: 360px; border: 1px solid var(--text); position: relative;
 }
 .m-cell { border: 1px solid rgba(0,0,0,0.06); }
-.m-xticks { display: none; }
+.m-xticks {
+  display: flex; justify-content: space-around; width: 360px;
+  font-size: 10px; color: var(--neutral); padding-top: 6px;
+  text-align: center;
+}
+.m-xticks span { line-height: 1.2; }
 .m-xlabel {
   font-size: 11px; font-weight: 600; color: var(--text-secondary);
   text-align: center; padding-top: 8px; letter-spacing: 0.5px;
@@ -578,10 +590,20 @@ textarea { resize: vertical; min-height: 64px; }
       <h3>Matrice Impact / Probabilite</h3>
       <div class="matrix-layout">
         <div class="m-ylabel">Impact</div>
-        <div class="m-yticks"></div>
+        <div class="m-yticks">
+          <span><span class="m-tick-num">1</span><span class="m-tick-label">Negligeable</span></span>
+          <span><span class="m-tick-num">2</span><span class="m-tick-label">Mineur</span></span>
+          <span><span class="m-tick-num">3</span><span class="m-tick-label">Significatif</span></span>
+          <span><span class="m-tick-num">4</span><span class="m-tick-label">Critique</span></span>
+        </div>
         <div class="m-core">
           <div class="m-grid" id="mGrid"></div>
-          <div class="m-xticks"></div>
+          <div class="m-xticks">
+            <span><span class="m-tick-num">1</span><span class="m-tick-label">Improbable</span></span>
+            <span><span class="m-tick-num">2</span><span class="m-tick-label">Possible</span></span>
+            <span><span class="m-tick-num">3</span><span class="m-tick-label">Probable</span></span>
+            <span><span class="m-tick-num">4</span><span class="m-tick-label">Quasi certain</span></span>
+          </div>
           <div class="m-xlabel">Probabilite</div>
         </div>
       </div>
