@@ -789,21 +789,21 @@ function calcD() {
 
 function riskTag(impact, prob) {
   const r = impact * prob;
-  if (r <= 3) return { t: 'Faible', c: 'rt-low' };
-  if (r <= 6) return { t: 'Modere', c: 'rt-med' };
-  if (r <= 10) return { t: 'Eleve', c: 'rt-high' };
+  if (r <= 2) return { t: 'Faible', c: 'rt-low' };
+  if (r <= 4) return { t: 'Modere', c: 'rt-med' };
+  if (r <= 9) return { t: 'Eleve', c: 'rt-high' };
   return { t: 'Critique', c: 'rt-crit' };
 }
 
 function buildGrid() {
   const g = document.getElementById('mGrid');
   g.innerHTML = '';
-  const G='#4caf50', Y='#ffc107', O='#ff9800', R='#f44336';
+  const G='#4caf50', J='#ffc107', O='#ff9800', R='#f44336';
   const palette = [
-    [Y, O, R, R],
-    [G, Y, O, R],
-    [G, Y, Y, O],
-    [G, G, G, Y],
+    [O, R, R, R],
+    [J, O, O, R],
+    [J, J, O, O],
+    [G, G, J, J],
   ];
   for (let r = 0; r < 4; r++)
     for (let c = 0; c < 4; c++) {
