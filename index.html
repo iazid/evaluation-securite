@@ -271,11 +271,67 @@ textarea { resize: vertical; min-height: 72px; }
 .actions .btn { font-size: 13px; }
 
 @media print {
-  .steps-nav, .form-nav, .actions, .btn { display: none !important; }
-  .form-section, #results { display: block !important; page-break-inside: avoid; }
-  .m-cell, .cid-pt, .sc, .sc::before, .risk-tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  body { background: white; }
-  .app-header { background: var(--ink) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  body { background: white !important; font-size: 12px; }
+
+  .steps-nav, .form-nav, .actions { display: none !important; }
+
+  .app-header { background: var(--ink) !important; }
+  .app-header-inner { padding: 24px 0 18px; }
+  .app-header h1 { font-size: 18px; }
+
+  .app { max-width: 100%; padding: 0 24px 0; }
+
+  .form-section { display: block !important; padding: 20px 0 !important; border: none !important; background: transparent !important; }
+  .form-section + .form-section { border-top: 1px solid #ccc !important; }
+
+  #results { display: block !important; }
+  #results.visible { animation: none; }
+
+  .section-title { font-size: 14px; margin-bottom: 4px; }
+  .section-desc { font-size: 11px; margin-bottom: 16px; }
+
+  .q { padding: 10px 12px; margin-bottom: 10px; background: #f8f8f6 !important; border: 1px solid #ddd !important; page-break-inside: avoid; }
+  .q-label { font-size: 11.5px; margin-bottom: 4px; }
+  .q-hint { font-size: 10px; margin-bottom: 6px; }
+
+  .choices { gap: 4px; }
+  .choice span { padding: 4px 10px; font-size: 10.5px; }
+  .choice input:checked + span { background: var(--ink) !important; color: white !important; border-color: var(--ink) !important; }
+
+  .yn-btn { padding: 4px 14px; font-size: 10.5px; }
+  .yn-btn.sel-y { background: var(--ok) !important; color: white !important; }
+  .yn-btn.sel-n { background: var(--danger) !important; color: white !important; }
+
+  input[type="text"], input[type="number"], textarea { padding: 6px 8px; font-size: 11px; }
+
+  .scores { gap: 10px; margin-bottom: 20px; }
+  .sc { padding: 16px 12px; }
+  .sc::before { height: 3px; }
+  .sc-title { font-size: 10px; }
+  .sc-val { font-size: 24px; }
+  .sc-sub { font-size: 10px; }
+
+  .matrix-block { padding: 16px; margin-bottom: 16px; page-break-inside: avoid; }
+  .matrix-block h3 { font-size: 12px; margin-bottom: 12px; }
+  .m-grid { height: 280px !important; }
+  .m-yticks { height: 280px !important; font-size: 8px; }
+  .m-xticks { font-size: 8px; }
+  .m-ylabel, .m-xlabel { font-size: 8px; }
+  .m-tick-num { font-size: 9px; }
+  .m-tick-label { font-size: 8px; }
+  .cid-pt { width: 22px !important; height: 22px !important; font-size: 9px !important; border-width: 1px; }
+
+  .detail-block { padding: 14px 16px; margin-bottom: 10px; page-break-inside: avoid; }
+  .detail-block h3 { font-size: 11px; margin-bottom: 8px; padding-bottom: 6px; }
+  .d-row { padding: 5px 0; font-size: 11px; }
+
+  .result-header { margin-bottom: 16px; }
+  .result-header h2 { font-size: 16px; }
+  .result-header p { font-size: 11px; }
+
+  .risk-tag { font-size: 9px; padding: 1px 6px; }
 }
 
 @media (max-width: 768px) {
