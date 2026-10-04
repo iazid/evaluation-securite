@@ -267,6 +267,29 @@ textarea { resize: vertical; min-height: 72px; }
 .d-key { color: var(--text-2); }
 .d-val { font-weight: 600; text-align: right; }
 
+/* ---- Methodology section ---- */
+.methodo-block { background: var(--surface); border: 1px solid var(--border); padding: 28px 32px; margin-bottom: 16px; }
+.methodo-block h3 { font-size: 15px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); letter-spacing: -0.1px; }
+.methodo-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none;
+}
+.methodo-toggle::after {
+  content: '+'; font-size: 18px; font-weight: 600; color: var(--text-3);
+  transition: transform 0.2s;
+}
+.methodo-block.open .methodo-toggle::after { content: '\2212'; }
+.methodo-content { display: none; }
+.methodo-block.open .methodo-content { display: block; }
+.methodo-sub { font-size: 13.5px; font-weight: 600; color: var(--text); margin: 20px 0 8px; }
+.methodo-sub:first-child { margin-top: 12px; }
+.methodo-text { font-size: 13px; color: var(--text-2); line-height: 1.65; margin-bottom: 8px; }
+.methodo-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 10px 0 16px; }
+.methodo-table th { background: #f5f5f0; font-weight: 600; text-align: left; padding: 8px 12px; border: 1px solid var(--border-light); color: var(--text); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.3px; }
+.methodo-table td { padding: 7px 12px; border: 1px solid var(--border-light); color: var(--text-2); }
+.methodo-table tr:nth-child(even) td { background: #fafaf8; }
+.methodo-color { display: inline-block; width: 12px; height: 12px; vertical-align: middle; margin-right: 6px; }
+
 .actions { display: flex; gap: 10px; margin-top: 28px; }
 .actions .btn { font-size: 13px; }
 
@@ -332,6 +355,16 @@ textarea { resize: vertical; min-height: 72px; }
   .result-header p { font-size: 11px; }
 
   .risk-tag { font-size: 9px; padding: 1px 6px; }
+
+  .methodo-block { padding: 14px 16px; margin-bottom: 10px; }
+  .methodo-block h3 { font-size: 12px; margin-bottom: 8px; }
+  .methodo-block .methodo-content { display: block !important; }
+  .methodo-toggle::after { display: none !important; }
+  .methodo-sub { font-size: 11px; margin: 12px 0 4px; }
+  .methodo-text { font-size: 10px; }
+  .methodo-table { font-size: 9.5px; }
+  .methodo-table th { padding: 4px 6px; font-size: 9px; }
+  .methodo-table td { padding: 4px 6px; }
 }
 
 @media (max-width: 768px) {
@@ -731,6 +764,84 @@ textarea { resize: vertical; min-height: 72px; }
     <div class="detail-block">
       <h3>Synthese du contexte</h3>
       <div id="detail-ctx"></div>
+    </div>
+
+    <div class="methodo-block" id="methodo">
+      <h3 class="methodo-toggle" onclick="this.parentElement.classList.toggle('open')">Methodologie et cotation</h3>
+      <div class="methodo-content">
+
+        <div class="methodo-sub">Principe general</div>
+        <p class="methodo-text">Le risque est evalue selon deux axes : l'<strong>impact</strong> (consequence metier d'un incident) et la <strong>probabilite</strong> (vraisemblance qu'un incident survienne). Chaque axe est note de 1 a 4. Le croisement de ces deux valeurs sur la matrice determine le niveau de risque.</p>
+
+        <div class="methodo-sub">Cotation de l'impact</div>
+        <p class="methodo-text">L'impact est calcule independamment pour chaque critere CID a partir des reponses aux questions de la section correspondante. Chaque question contribue un certain nombre de points, et le total est normalise sur une echelle de 1 a 4.</p>
+
+        <table class="methodo-table">
+          <tr><th colspan="3">Confidentialite (max 11 points &rarr; normalise sur 4)</th></tr>
+          <tr><td>Impact d'une fuite</td><td>Valeur directe &times; 2</td><td>0 &ndash; 8 pts</td></tr>
+          <tr><td>Obligations reglementaires</td><td>Oui = +2</td><td>0 &ndash; 2 pts</td></tr>
+          <tr><td>Risque juridique</td><td>Oui = +2</td><td>0 &ndash; 2 pts</td></tr>
+          <tr><td>Risque reputationnel</td><td>Oui = +1</td><td>0 &ndash; 1 pt</td></tr>
+          <tr><td>Personnes concernees</td><td>&gt;10k = +2 ; &gt;1k = +1</td><td>0 &ndash; 2 pts</td></tr>
+        </table>
+
+        <table class="methodo-table">
+          <tr><th colspan="3">Integrite (max 11 points &rarr; normalise sur 4)</th></tr>
+          <tr><td>Impact d'une alteration</td><td>Valeur directe &times; 2</td><td>0 &ndash; 8 pts</td></tr>
+          <tr><td>Aide a la decision / reglementaire</td><td>Oui = +2</td><td>0 &ndash; 2 pts</td></tr>
+          <tr><td>Pertes financieres</td><td>Oui = +2</td><td>0 &ndash; 2 pts</td></tr>
+          <tr><td>Danger pour les personnes</td><td>Oui = +3</td><td>0 &ndash; 3 pts</td></tr>
+        </table>
+
+        <table class="methodo-table">
+          <tr><th colspan="3">Disponibilite (max 15 points &rarr; normalise sur 4)</th></tr>
+          <tr><td>Tolerance a l'indisponibilite</td><td>&lt;4h = 4 ; &lt;1j = 3 ; &lt;3j = 2 ; &lt;1s = 1</td><td>0 &ndash; 4 pts</td></tr>
+          <tr><td>Impact d'une indisponibilite</td><td>Valeur directe &times; 2</td><td>0 &ndash; 8 pts</td></tr>
+          <tr><td>Temps reel requis</td><td>Oui = +2</td><td>0 &ndash; 2 pts</td></tr>
+          <tr><td>Plage de disponibilite</td><td>24/7 = +2 ; heures ouvrables = +1</td><td>0 &ndash; 2 pts</td></tr>
+          <tr><td>Processus dependants</td><td>&gt;5 = +2 ; &gt;2 = +1</td><td>0 &ndash; 2 pts</td></tr>
+          <tr><td>Impact externe</td><td>Oui = +1</td><td>0 &ndash; 1 pt</td></tr>
+        </table>
+
+        <div class="methodo-sub">Cotation de la probabilite (vraisemblance)</div>
+        <p class="methodo-text">La probabilite est commune aux trois axes CID. Elle combine deux familles de facteurs :</p>
+        <p class="methodo-text"><strong>Facteurs d'exposition et d'attractivite</strong> (issus du contexte) : exposition Internet, type d'hebergement, nombre et profil des utilisateurs, nature des donnees traitees, integrations critiques.</p>
+        <p class="methodo-text"><strong>Absence de mesures de protection</strong> : pas de controle d'acces, pas de chiffrement ou chiffrement partiel, pas de controles d'integrite, pas de piste d'audit, pas de separation des taches, pas de mode degrade, pas de plan de reprise.</p>
+
+        <table class="methodo-table">
+          <tr><th>Facteur</th><th>Condition</th><th>Points</th></tr>
+          <tr><td>Exposition Internet</td><td>Oui = +2 ; VPN = +1</td><td>0 &ndash; 2</td></tr>
+          <tr><td>Hebergement SaaS / Cloud public</td><td>+1</td><td>0 &ndash; 1</td></tr>
+          <tr><td>Nombre d'utilisateurs</td><td>&gt;1000 = +2 ; &gt;100 = +1</td><td>0 &ndash; 2</td></tr>
+          <tr><td>Profil utilisateurs (externes/mixte)</td><td>+1</td><td>0 &ndash; 1</td></tr>
+          <tr><td>Donnees sensibles ou financieres</td><td>+1</td><td>0 &ndash; 1</td></tr>
+          <tr><td>Donnees strategiques</td><td>+1</td><td>0 &ndash; 1</td></tr>
+          <tr><td>Integration critique</td><td>+1</td><td>0 &ndash; 1</td></tr>
+          <tr><td>Pas de controle d'acces</td><td>+2</td><td>0 &ndash; 2</td></tr>
+          <tr><td>Chiffrement absent ou inconnu</td><td>Aucun/ne sait pas = +2 ; partiel = +1</td><td>0 &ndash; 2</td></tr>
+          <tr><td>Pas de controles d'integrite</td><td>+1</td><td>0 &ndash; 1</td></tr>
+          <tr><td>Pas de piste d'audit</td><td>+1</td><td>0 &ndash; 1</td></tr>
+          <tr><td>Pas de separation des taches</td><td>+1</td><td>0 &ndash; 1</td></tr>
+          <tr><td>Pas de mode degrade</td><td>+1</td><td>0 &ndash; 1</td></tr>
+          <tr><td>Pas de plan de reprise</td><td>+1</td><td>0 &ndash; 1</td></tr>
+        </table>
+
+        <p class="methodo-text">Le score brut (base 1, max ~19) est normalise sur 1&ndash;4 par la formule : <code>arrondi(score &times; 4 / 19)</code>.</p>
+
+        <div class="methodo-sub">Niveaux de risque</div>
+        <p class="methodo-text">Le niveau de risque est determine par le produit Impact &times; Probabilite :</p>
+        <table class="methodo-table">
+          <tr><th>Produit</th><th>Niveau</th><th>Couleur matrice</th></tr>
+          <tr><td>1 &ndash; 2</td><td>Faible</td><td><span class="methodo-color" style="background:#2db84e"></span>Vert</td></tr>
+          <tr><td>3 &ndash; 4</td><td>Modere</td><td><span class="methodo-color" style="background:#f5d800"></span>Jaune</td></tr>
+          <tr><td>5 &ndash; 9</td><td>Eleve</td><td><span class="methodo-color" style="background:#f07e1a"></span>Orange</td></tr>
+          <tr><td>10 &ndash; 16</td><td>Critique</td><td><span class="methodo-color" style="background:#d32f2f"></span>Rouge</td></tr>
+        </table>
+
+        <div class="methodo-sub">Lecture de la matrice</div>
+        <p class="methodo-text">L'axe horizontal represente la probabilite (1 = improbable, 4 = quasi certain). L'axe vertical represente l'impact (1 = negligeable, 4 = critique). Chaque point CID (C, I, D) est positionne dans la cellule correspondant a son impact et a la probabilite calculee. La couleur de la cellule indique le niveau de risque resultant.</p>
+
+      </div>
     </div>
 
     <div class="actions">
