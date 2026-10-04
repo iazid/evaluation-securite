@@ -300,7 +300,7 @@ textarea { resize: vertical; min-height: 64px; }
       <div class="q-label">La solution est-elle exposee sur Internet ?</div>
       <div class="choices">
         <label class="choice"><input type="radio" name="ctx_internet" value="oui"><span>Oui</span></label>
-        <label class="choice"><input type="radio" name="ctx_internet" value="vpn"><span>Via VPN uniquement</span></label>
+        <label class="choice"><input type="radio" name="ctx_internet" value="vpn"><span>Via connexion securisee (VPN)</span></label>
         <label class="choice"><input type="radio" name="ctx_internet" value="non"><span>Non, reseau interne</span></label>
       </div>
     </div>
@@ -325,7 +325,7 @@ textarea { resize: vertical; min-height: 64px; }
         <label class="choice"><input type="checkbox" id="data1" value="personnelles"><span>Donnees personnelles</span></label>
         <label class="choice"><input type="checkbox" id="data2" value="sensibles"><span>Sensibles (sante, judiciaire)</span></label>
         <label class="choice"><input type="checkbox" id="data3" value="financieres"><span>Financieres</span></label>
-        <label class="choice"><input type="checkbox" id="data4" value="strategiques"><span>Strategiques / PI</span></label>
+        <label class="choice"><input type="checkbox" id="data4" value="strategiques"><span>Strategiques ou propriete intellectuelle</span></label>
         <label class="choice"><input type="checkbox" id="data5" value="publiques"><span>Publiques</span></label>
       </div>
     </div>
@@ -366,7 +366,8 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Donnees soumises a des reglementations (RGPD, PCI-DSS, HDS) ?</div>
+      <div class="q-label">Les donnees traitees sont-elles soumises a des obligations legales ou reglementaires ?</div>
+      <div class="q-hint">Exemples : protection des donnees personnelles (RGPD), donnees de sante, donnees bancaires</div>
       <div class="yn" id="yn_c_reglementation">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -374,7 +375,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Un mecanisme de controle d'acces est-il en place (authentification, gestion des habilitations) ?</div>
+      <div class="q-label">Les utilisateurs doivent-ils s'identifier pour acceder a la solution, et leurs droits sont-ils limites selon leur role ?</div>
       <div class="yn" id="yn_c_controle_acces">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -382,17 +383,19 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Les donnees sont-elles chiffrees (en transit et/ou au repos) ?</div>
+      <div class="q-label">Les donnees sont-elles protegees par du chiffrement ?</div>
+      <div class="q-hint">Le chiffrement rend les donnees illisibles pour quiconque n'a pas la cle. Il peut s'appliquer lors des echanges (ex : HTTPS) ou au stockage (ex : disque chiffre).</div>
       <div class="choices">
-        <label class="choice"><input type="radio" name="c_chiffrement" value="aucun"><span>Aucun chiffrement</span></label>
-        <label class="choice"><input type="radio" name="c_chiffrement" value="transit"><span>En transit</span></label>
-        <label class="choice"><input type="radio" name="c_chiffrement" value="repos"><span>Au repos</span></label>
+        <label class="choice"><input type="radio" name="c_chiffrement" value="aucun"><span>Non, pas de chiffrement</span></label>
+        <label class="choice"><input type="radio" name="c_chiffrement" value="transit"><span>Lors des echanges uniquement</span></label>
+        <label class="choice"><input type="radio" name="c_chiffrement" value="repos"><span>Au stockage uniquement</span></label>
         <label class="choice"><input type="radio" name="c_chiffrement" value="les-deux"><span>Les deux</span></label>
+        <label class="choice"><input type="radio" name="c_chiffrement" value="ne-sait-pas"><span>Je ne sais pas</span></label>
       </div>
     </div>
 
     <div class="q">
-      <div class="q-label">Risque d'impact juridique ou de sanctions en cas de fuite ?</div>
+      <div class="q-label">En cas de fuite, l'organisation risque-t-elle des poursuites, amendes ou sanctions ?</div>
       <div class="yn" id="yn_c_juridique">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -400,7 +403,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Risque d'impact sur l'image ou la reputation ?</div>
+      <div class="q-label">En cas de fuite, y a-t-il un risque pour l'image ou la reputation de l'organisation ?</div>
       <div class="yn" id="yn_c_reputation">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -408,7 +411,8 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Nombre de personnes dont les donnees personnelles sont stockees</div>
+      <div class="q-label">Combien de personnes sont concernees par les donnees personnelles stockees dans la solution ?</div>
+      <div class="q-hint">Clients, collaborateurs, partenaires... Indiquez 0 si aucune donnee personnelle n'est stockee.</div>
       <input type="number" id="c_nb_personnes" placeholder="10000" min="0">
     </div>
 
@@ -434,7 +438,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Les donnees alimentent-elles des decisions strategiques ou reglementaires ?</div>
+      <div class="q-label">Les donnees de la solution servent-elles a prendre des decisions importantes ou a produire des rapports reglementaires ?</div>
       <div class="yn" id="yn_i_decisions">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -442,7 +446,8 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Des controles de coherence ou de validation des donnees saisies sont-ils en place ?</div>
+      <div class="q-label">La solution verifie-t-elle automatiquement la coherence des donnees saisies ?</div>
+      <div class="q-hint">Exemples : alerte si un montant est anormal, refus d'une date incoherente, verification de format</div>
       <div class="yn" id="yn_i_controles">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -450,7 +455,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Une tracabilite ou piste d'audit existe-t-elle sur les modifications de donnees ?</div>
+      <div class="q-label">Peut-on savoir qui a modifie une donnee, quand et quelle etait la valeur precedente ?</div>
       <div class="yn" id="yn_i_audit">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -466,7 +471,7 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Une donnee erronee pourrait-elle mettre en danger des personnes ?</div>
+      <div class="q-label">Une donnee erronee pourrait-elle mettre en danger la sante ou la securite de personnes ?</div>
       <div class="yn" id="yn_i_danger">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -474,7 +479,8 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Un processus de double validation ou de separation des taches est-il en place ?</div>
+      <div class="q-label">Les actions sensibles necessitent-elles la validation d'une deuxieme personne ?</div>
+      <div class="q-hint">Exemples : un virement doit etre valide par un responsable, une modification de contrat necessite une approbation</div>
       <div class="yn" id="yn_i_separation">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -493,7 +499,7 @@ textarea { resize: vertical; min-height: 64px; }
     <p class="section-desc">Risques lies a l'indisponibilite de la solution</p>
 
     <div class="q">
-      <div class="q-label">Quelle est la tolerance maximale a l'indisponibilite de la solution ?</div>
+      <div class="q-label">Combien de temps l'activite peut-elle fonctionner sans cette solution ?</div>
       <div class="choices">
         <label class="choice"><input type="radio" name="d_tolerance" value="4h"><span>Moins de 4h</span></label>
         <label class="choice"><input type="radio" name="d_tolerance" value="1j"><span>Moins de 1 jour</span></label>
@@ -514,7 +520,8 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Un mode degrade ou une procedure de continuite manuelle est-il disponible ?</div>
+      <div class="q-label">Si la solution tombe en panne, existe-t-il une facon de continuer a travailler autrement ?</div>
+      <div class="q-hint">Exemples : basculer sur un fichier Excel, traitement papier, saisie a posteriori</div>
       <div class="yn" id="yn_d_degrade">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -522,7 +529,8 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Plan de reprise d'activite (PRA) en place ?</div>
+      <div class="q-label">Un dispositif de secours est-il prevu pour remettre la solution en marche apres une panne grave ?</div>
+      <div class="q-hint">Par exemple : sauvegarde reguliere, serveur de secours, procedure de restauration testee</div>
       <div class="yn" id="yn_d_pra">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -530,7 +538,8 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">La solution est-elle utilisee dans des processus temps-reel ou critiques ?</div>
+      <div class="q-label">La solution doit-elle reagir immediatement, sans delai, pour que l'activite fonctionne ?</div>
+      <div class="q-hint">Exemples : supervision en direct, transactions instantanees, pilotage d'equipements</div>
       <div class="yn" id="yn_d_temps_reel">
         <button class="yn-btn" onclick="setYN(this,'oui')">Oui</button>
         <button class="yn-btn" onclick="setYN(this,'non')">Non</button>
@@ -538,11 +547,11 @@ textarea { resize: vertical; min-height: 64px; }
     </div>
 
     <div class="q">
-      <div class="q-label">Plage de fonctionnement requise</div>
+      <div class="q-label">Quand la solution doit-elle etre accessible ?</div>
       <div class="choices">
-        <label class="choice"><input type="radio" name="d_plage" value="24x7"><span>24/7</span></label>
-        <label class="choice"><input type="radio" name="d_plage" value="heures-ouvrables"><span>Heures ouvrables</span></label>
-        <label class="choice"><input type="radio" name="d_plage" value="periodique"><span>Periodique / batch</span></label>
+        <label class="choice"><input type="radio" name="d_plage" value="24x7"><span>En permanence, jour et nuit</span></label>
+        <label class="choice"><input type="radio" name="d_plage" value="heures-ouvrables"><span>Pendant les heures de bureau</span></label>
+        <label class="choice"><input type="radio" name="d_plage" value="periodique"><span>Ponctuellement (certains jours ou periodes)</span></label>
       </div>
     </div>
 
@@ -679,7 +688,7 @@ function calcProb() {
   // Mesures de protection (absence = augmente la proba)
   if (hv('c_controle_acces') === 'non') s += 2;
   const ch = rv('c_chiffrement');
-  if (ch === 'aucun') s += 2; else if (ch === 'transit' || ch === 'repos') s += 1;
+  if (ch === 'aucun' || ch === 'ne-sait-pas') s += 2; else if (ch === 'transit' || ch === 'repos') s += 1;
   if (hv('i_controles') === 'non') s += 1;
   if (hv('i_audit') === 'non') s += 1;
   if (hv('i_separation') === 'non') s += 1;
