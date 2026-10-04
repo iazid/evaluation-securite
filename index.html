@@ -903,12 +903,6 @@ function compute() {
   const nom = document.getElementById('ctx_nom').value || 'Solution non nommee';
   document.getElementById('res-name').textContent = nom;
 
-  buildGrid();
-  _placed.length = 0;
-  dot('C', 'pt-c', ci, prob);
-  dot('I', 'pt-i', ii, prob);
-  dot('D', 'pt-d', di, prob);
-
   document.getElementById('detail-scoring').innerHTML = `
     <div class="d-row"><span class="d-key">Probabilite (exposition, attractivite)</span><span class="d-val">${prob} / 4</span></div>
     <div class="d-row"><span class="d-key">Impact Confidentialite</span><span class="d-val">${ci} / 4 <span class="risk-tag ${cr.c}">${cr.t}</span></span></div>
@@ -925,9 +919,17 @@ function compute() {
     <div class="d-row"><span class="d-key">Donnees</span><span class="d-val">${dt.length ? dt.join(', ') : '-'}</span></div>
     <div class="d-row"><span class="d-key">Integrations</span><span class="d-val">${rv('ctx_integration') || '-'}</span></div>`;
 
+  // Show results BEFORE placing dots so grid has layout dimensions
   for (let i = 0; i < 4; i++) document.getElementById('section-' + i).classList.remove('visible');
   document.getElementById('results').classList.add('visible');
   step = 4;
+
+  // Now grid has offsetWidth/offsetHeight, place dots
+  buildGrid();
+  _placed.length = 0;
+  dot('C', 'pt-c', ci, prob);
+  dot('I', 'pt-i', ii, prob);
+  dot('D', 'pt-d', di, prob);
   document.querySelectorAll('.step-tab').forEach((t, idx) => {
     t.classList.remove('active', 'done');
     if (idx < 4) t.classList.add('done'); else t.classList.add('active');
