@@ -798,11 +798,12 @@ function riskTag(impact, prob) {
 function buildGrid() {
   const g = document.getElementById('mGrid');
   g.innerHTML = '';
+  const G='#4caf50', Y='#ffc107', O='#ff9800', R='#f44336';
   const palette = [
-    ['#f6c842','#f0a030','#e05a2b','#c62828'],
-    ['#b2d85a','#f6c842','#f0a030','#e05a2b'],
-    ['#6abf69','#b2d85a','#f6c842','#f0a030'],
-    ['#388e3c','#6abf69','#b2d85a','#f6c842'],
+    [Y, O, R, R],
+    [G, Y, O, R],
+    [G, Y, Y, O],
+    [G, G, G, Y],
   ];
   for (let r = 0; r < 4; r++)
     for (let c = 0; c < 4; c++) {
